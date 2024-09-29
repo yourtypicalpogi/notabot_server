@@ -3,11 +3,12 @@ const helmet = require("helmet");
 const cors = require("cors");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use Heroku's port or fallback to 3000
 
-app.use(helmet()); // Use helmet to secure your app
-app.use(cors()); // Enable CORS
-app.use(express.json()); // Limit JSON body size
+// Middleware
+app.use(helmet()); // Use Helmet to secure your app
+app.use(cors()); // Enable CORS for all routes
+app.use(express.json()); // Parse JSON bodies
 
 // Function to parse the cURL command
 const parseCurlCommand = (curlCommand) => {
@@ -40,13 +41,14 @@ const parseCurlCommand = (curlCommand) => {
   if (method !== "GET") {
     const bodyMatch = curlCommand.match(bodyRegex);
     if (bodyMatch) {
-      body = bodyMatch[1].replace(/%5E/g, "").replace(/\^/g, "");
+      body = bodyMatch[1].replace(/%5E/g, "").replace(/\^/g, ""); // Clean up the body
     }
   }
 
-  return { url, method, headers, body }; // Return body as well
+  return { url, method, headers, body }; // Return the parsed components
 };
 
+// Endpoint to extract data from cURL command
 app.post("/extract", (req, res) => {
   const { curlCommand } = req.body;
 
@@ -60,17 +62,20 @@ app.post("/extract", (req, res) => {
   }
 });
 
+// Global error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error(err.stack); // Log the error stack
   res.status(500).json({ success: false, message: "Internal Server Error" });
 });
 
+// Start the server and listen on the specified port
 const server = app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`); // Log server start
 });
 
+// Handle graceful shutdown
 process.on("SIGTERM", () => {
   server.close(() => {
-    console.log("Process terminated");
+    console.log("Process terminated gracefully"); // Log termination
   });
 });
