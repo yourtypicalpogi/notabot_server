@@ -35,7 +35,8 @@ const parseCurlCommand = (curlCommand) => {
 
   let headerMatch;
   while ((headerMatch = headerRegex.exec(curlCommand)) !== null) {
-    headers[headerMatch[1].trim()] = headerMatch[2].trim();
+    headers[headerMatch[1].trim().replace(/%5E/g, "").replace(/\^/g, "")] =
+      headerMatch[2].trim();
   }
 
   if (method !== "GET") {
