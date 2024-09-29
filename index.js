@@ -3,7 +3,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 
 const app = express();
-const port = process.env.PORT || 80; // Use PORT from .env or default to 3000
+const port = 80;
 
 app.use(helmet()); // Use helmet to secure your app
 app.use(cors()); // Enable CORS
