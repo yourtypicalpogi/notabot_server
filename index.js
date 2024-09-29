@@ -1,8 +1,13 @@
 const express = require("express");
-const app = express();
-const port = 3000;
+const helmet = require("helmet");
+const cors = require("cors");
 
-app.use(express.json());
+const app = express();
+const port = process.env.PORT || 80; // Use PORT from .env or default to 3000
+
+app.use(helmet()); // Use helmet to secure your app
+app.use(cors()); // Enable CORS
+app.use(express.json()); // Limit JSON body size
 
 // Function to parse the cURL command
 const parseCurlCommand = (curlCommand) => {
@@ -32,7 +37,6 @@ const parseCurlCommand = (curlCommand) => {
     headers[headerMatch[1].trim()] = headerMatch[2].trim();
   }
 
-  // Only parse body if the method is not GET
   if (method !== "GET") {
     const bodyMatch = curlCommand.match(bodyRegex);
     if (bodyMatch) {
@@ -40,7 +44,7 @@ const parseCurlCommand = (curlCommand) => {
     }
   }
 
-  return { url, method, headers };
+  return { url, method, headers, body }; // Return body as well
 };
 
 app.post("/extract", (req, res) => {
@@ -56,6 +60,17 @@ app.post("/extract", (req, res) => {
   }
 });
 
-app.listen(port, () => {
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ success: false, message: "Internal Server Error" });
+});
+
+const server = app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
+});
+
+process.on("SIGTERM", () => {
+  server.close(() => {
+    console.log("Process terminated");
+  });
 });
