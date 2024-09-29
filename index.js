@@ -15,7 +15,7 @@ const parseCurlCommand = (curlCommand) => {
   let url = "";
   let method = "GET"; // Default method
   let headers = {};
-  let body = "";
+  let body = null;
 
   // Regex patterns
   const urlRegex = /curl\s+"([^"]+)"/;
