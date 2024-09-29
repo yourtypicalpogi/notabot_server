@@ -3,7 +3,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 
 const app = express();
-const port = 80;
+const port = 3000;
 
 app.use(helmet()); // Use helmet to secure your app
 app.use(cors()); // Enable CORS
